@@ -18,8 +18,8 @@ $nas_port = 2222;
 $anno = 2016;
 $mese = 1;
 
-$azione = "traccia";
-//$azione = "elimina";
+//$azione = "traccia";
+$azione = "elimina";
 
 writelog('Start Check Delete NAS');
 
@@ -33,9 +33,9 @@ else{writelog("Effettuato il login sftp al server: " .  $nas_servername . " port
 
 if($azione == "traccia"){
     file_put_contents($report_filename, "");
-    writelog("Verranno tracciate le cartelle con data <= a: ".$anno." nelle seguenti repository:");
+    writelog("Verranno tracciate le cartelle con anno <= ".$anno." e mese <= ".$mese." nelle seguenti repository:");
 }
-if($azione == "elimina"){writelog("Verranno eliminate le cartelle con data <= a: ".$anno." nelle seguenti repository:");}
+if($azione == "elimina"){writelog("Verranno eliminate le cartelle con anno <= ".$anno." e mese <= ".$mese." nelle seguenti repository:");}
 foreach($repositories as $repository){writelog($repository);}
 
 foreach($repositories as $repository){
@@ -79,13 +79,17 @@ function writelog($log_msg){
     
     //$nl = '<br>';
     $nl = PHP_EOL;
+    
+    if( stristr(PHP_OS, "WIN") ) {$sl = "\\";}
+    else {$sl = "/";}
 
     $logs_folder_name = 'logs';
     $logs_file_name = 'logs_check_nas.log';
-
-    $log_date_folder = ROOTPATH.'/'.$logs_folder_name.'/'.date("Y-m-d");
+    $log_date_folder = ROOTPATH.$sl.$logs_folder_name.$sl.date("Y-m-d");
+    
+    if(!is_dir(ROOTPATH.$sl.$logs_folder_name)){mkdir(ROOTPATH.$sl.$logs_folder_name);}
     if(!is_dir($log_date_folder)){mkdir($log_date_folder);}
-    $log_path = $log_date_folder.'/'.$logs_file_name;
+    $log_path = $log_date_folder.$sl.$logs_file_name;
 
     echo $log_msg.$nl;
     file_put_contents($log_path, date("Y-m-d H:i:s") . ': '.$log_msg.PHP_EOL,FILE_APPEND );
