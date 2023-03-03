@@ -1,2 +1,3 @@
-nuova_chiave_privata.ppk
-allarmi_mc_logs\
+old/*
+logs/*
+report_check_nas.txt
